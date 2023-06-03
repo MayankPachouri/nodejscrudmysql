@@ -1,0 +1,180 @@
+
+Node Js CRUD api using mysql
+@mayank pachouri
+
+1. // Create directory
+    mkdir NodeMysqlCrudApp
+    // then Navigate to NodeMysqlCrudApp
+    cd NodeMysqlCrudApp
+
+2. npm init -y
+    //package.json looks
+    {
+      "name": "nodemysqlcrudapp",
+      "version": "1.0.0",
+      "description": "This is app for creating api using node",
+      "main": "server.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+      },
+      "keywords": [
+        "nodejs",
+        "expressjs",
+        "mysql",
+        "api"
+      ],
+      "author": "Mayank Pachouri",
+      "license": "ISC",
+     
+    }
+    
+3. npm install express --save
+
+4. npm install body-parser --save
+
+5. npm install mysql --save
+
+6. npm install --save-dev nodemon
+
+7. touch server.js
+
+    // Add some code in server.js file
+    
+    <!------here----->
+    
+    const express = require('express');
+    const bodyParser = require('body-parser');
+    // create express app
+    const app = express();
+    // Setup server port
+    const port = process.env.PORT || 5000;
+    // parse requests of content-type - application/x-www-form-urlencoded
+    app.use(bodyParser.urlencoded({ extended: true }))
+    // parse requests of content-type - application/json
+    app.use(bodyParser.json())
+    // define a root route
+    app.get('/', (req, res) => {
+      res.send("Hello World");
+    });
+    // listen for requests
+    app.listen(port, () => {
+      console.log(`Server is listening on port ${port}`);
+    });
+    
+    <!------here----->
+
+
+    //Now run the web server using node server.js or node server command 
+    
+8.  node server.js
+    OR
+    node server  
+    
+    // Now open your favourite browser and navigate to http://localhost:5000 . Browser will show Hello World .  That’s  great now our server is running 
+    
+    //If we want run the server using nodemon then we have to use the nodemon server.js or nodemon server
+    
+    // Let’s do some change in package.json file , add a line of code in scripts object of package.json file.
+    
+    "start": "nodemon server"
+    
+    like
+     
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "nodemon server"
+      },
+    
+9. npm start  
+
+10. create database
+       CREATE DATABASE node_mysql_crud_db;
+        CREATE  TABLE IF NOT EXISTS `employees` (
+          `id` BIGINT UNSIGNED AUTO_INCREMENT,
+          `first_name` VARCHAR(255) NOT NULL,
+          `last_name` VARCHAR(255) NOT NULL,
+          `email` VARCHAR(255) NOT NULL,
+          `phone` VARCHAR(50) NOT NULL,
+          `organization` VARCHAR(255) NOT NULL,
+          `designation` VARCHAR(100) NOT NULL,
+          `salary` DECIMAL(11,2) UNSIGNED DEFAULT 0.00,
+          `status` TINYINT UNSIGNED DEFAULT 0,
+          `is_deleted` TINYINT UNSIGNED DEFAULT 0,
+          `created_at` DATETIME NOT NULL,
+          `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+          PRIMARY KEY (`id`))
+        ENGINE = InnoDB;
+        INSERT INTO `node_mysql_crud_db`.`employees` (`first_name`, `last_name`, `email`, `phone`, `organization`, `designation`, `salary`, `status`, `is_deleted`, `created_at`) VALUES ('John', 'Doe', 'johndoe@gmail.com', '1234567890', 'BR Softech Pvt Ltd', 'Full Stack Developer', '500.00', '1', '0', '2019-11-19 03:30:30');
+        INSERT INTO `node_mysql_crud_db`.`employees` (`first_name`, `last_name`, `email`, `phone`, `organization`, `designation`, `salary`, `status`, `is_deleted`, `created_at`) VALUES ('Jane', 'Doe', 'janedoe@gmail.com', '9876543210', 'RG Infotech Jaipur', 'PHP Developer', '450.00', '1', '0', '2019-11-19 03:35:30');
+
+11. mkdir config
+    cd config
+    touch db.config.js
+    
+    // Now open db.config.js and add code
+    
+    'use strict';
+    const mysql = require('mysql');
+    //local mysql db connection
+    const dbConn = mysql.createConnection({
+      host     : 'localhost',
+      user     : 'root',
+      password : '',
+      database : 'node_mysql_crud_db'
+    });
+    dbConn.connect(function(err) {
+      if (err) throw err;
+      console.log("Database Connected!");
+    });
+    module.exports = dbConn;
+    
+
+
+12. Project Folder Structure
+
+    /NodeMysqlCrudApp$ mkdir src
+    /NodeMysqlCrudApp$ cd src
+    /NodeMysqlCrudApp/src$ mkdir controllers
+    /NodeMysqlCrudApp/src$ cd controllers
+    /NodeMysqlCrudApp/src/controllers$ touch employee. controller.js
+    /NodeMysqlCrudApp/src/controllers$ touch employee.controller.js
+    /NodeMysqlCrudApp/src/controllers$ cd ..
+    /NodeMysqlCrudApp/src$ mkdir models
+    /NodeMysqlCrudApp/src$ cd models
+    /NodeMysqlCrudApp/src/models$ touch employee.model.js
+    /NodeMysqlCrudApp/src/models$ cd ..
+    /NodeMysqlCrudApp/src$ mkdir routes
+    /NodeMysqlCrudApp/src$ cd routes
+    /NodeMysqlCrudApp/src/routes$ touch employee.routes.js
+    /NodeMysqlCrudApp/src/routes$ cd ..
+    /NodeMysqlCrudApp/src$ 
+    
+13. API End Points
+
+    APIs Test in Postman
+    
+    GET /api/v1/employees: will give all employees stored in database
+    GET /api/v1/employees/<employee_id>: will give a specific employee with employee_id.
+    POST /api/v1/employees : create a employee
+    PATCH /api/v1/employees/<employee_id>: update a employee partially
+    DELETE /api/v1/employees/<employee_id>: delete a employee
+    PUT /api/v1/employees/<employee_id>: update a employee completely
+
+
+
+ERROR: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+Solve: 
+    // Connect to MySQL
+    $ mysql -u root -p
+    Enter password: (enter your root password)
+    
+    //Reset your password
+    mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'your_new_password';
+    mysql> FLUSH PRIVILEGES;
+    mysql> quit
+    OR
+    create user nodeuser@localhost identified by 'nodeuser@1234';
+    grant all privileges on node.* to nodeuser@localhost;
+    ALTER USER 'nodeuser'@localhost IDENTIFIED WITH mysql_native_password BY 'nodeuser@1234';
+    
+
