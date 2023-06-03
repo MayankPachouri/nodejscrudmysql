@@ -1,7 +1,7 @@
 {
   "name": "nodejscrudmysql",
   "version": "1.0.0",
-  "description": "this i crud api using mysql",
+  "description": "this is crud api using mysql",
   "main": "index.js",
   "dependencies": {
     "body-parser": "^1.20.2",
